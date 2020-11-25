@@ -1,52 +1,80 @@
 class Solution {
-    
-    // List<List<Integer>> li; //= new ArrayList<>();
-    // Map<Integer,Integer> map;// = new HashMap<>();
-    
-    public List<List<Integer>> threeSum(int[] nums) {
-        
-        // TOO SLOW, Map approach
-//         li = new ArrayList<>();
-//         map = new HashMap<>();
-        
-//         for(int i = 0; i < nums.length; i++) {
-//             twoSum(nums, 0 - nums[i], i);
-​
-//         }
-        
-//         return li;
-        
-        
-        
-        // two pointers approach
-        Arrays.sort(nums);
-        List<List<Integer>> li = new ArrayList<>();
-        
-        for(int i = 0; i < nums.length; i++) {
-            if(nums[i] > 0) break;
-            if(i > 0 && nums[i] == nums[i - 1]) continue;
-            int p1 = i + 1, p2 = nums.length - 1;
-            int target = 0 - nums[i];
-            
-            while(p1 < p2) {
-                int sum = nums[p1] + nums[p2];
-                if(sum == target) {
-                    List<Integer> curr = new ArrayList<>();
-                    curr.add(nums[i]);
-                    curr.add(nums[p1]);
-                    curr.add(nums[p2]);
-                    
-                    // curr.sort((Integer n1, Integer n2) -> n1 - n2);
-                    //if(!li.contains(curr)) 
-                    li.add(curr);
-                    
-                    while(p1 < p2 && nums[p1] == nums[p1 + 1]) p1++;
-                    while(p1 < p2 && nums[p2] == nums[p2 - 1]) p2--;
-                    
-                    p1++;
-                    p2--;
-                } else if (sum < target) p1++;
-                else p2--;
-            }
-            
-        }
+    
+    // List<List<Integer>> li; //= new ArrayList<>();
+    // Map<Integer,Integer> map;// = new HashMap<>();
+    
+    public List<List<Integer>> threeSum(int[] nums) {
+        
+        // TOO SLOW, Map approach
+//         li = new ArrayList<>();
+//         map = new HashMap<>();
+        
+//         for(int i = 0; i < nums.length; i++) {
+//             twoSum(nums, 0 - nums[i], i);
+
+//         }
+        
+//         return li;
+        
+        
+        
+        // two pointers approach
+        Arrays.sort(nums);
+        List<List<Integer>> li = new ArrayList<>();
+        
+        for(int i = 0; i < nums.length; i++) {
+            if(nums[i] > 0) break;
+            if(i > 0 && nums[i] == nums[i - 1]) continue;
+            int p1 = i + 1, p2 = nums.length - 1;
+            int target = 0 - nums[i];
+            
+            while(p1 < p2) {
+                int sum = nums[p1] + nums[p2];
+                if(sum == target) {
+                    List<Integer> curr = new ArrayList<>();
+                    curr.add(nums[i]);
+                    curr.add(nums[p1]);
+                    curr.add(nums[p2]);
+                    
+                    // curr.sort((Integer n1, Integer n2) -> n1 - n2);
+                    //if(!li.contains(curr)) 
+                    li.add(curr);
+                    
+                    while(p1 < p2 && nums[p1] == nums[p1 + 1]) p1++;
+                    while(p1 < p2 && nums[p2] == nums[p2 - 1]) p2--;
+                    
+                    p1++;
+                    p2--;
+                } else if (sum < target) p1++;
+                else p2--;
+            }
+            
+        }
+        
+        return li;
+    }
+    
+//     public void twoSum(int[] nums, int target, int start) {
+//         map = new HashMap<>();
+//         for(int i = start + 1; i < nums.length; i++) {
+//             int rem = target - nums[i];
+//             if(map.containsKey(rem)) {
+//                 // found the key, what's next
+//                 List<Integer> curr = new ArrayList<>();
+//                 curr.add(- target);
+//                 curr.add(rem);
+//                 curr.add(nums[i]);
+                
+//                 curr.sort((Integer n1, Integer n2) -> n1 - n2);
+//                 if(!li.contains(curr)) li.add(curr);
+                
+//                 int count = map.get(rem);
+//                 if (count == 1) map.remove(rem);
+//                 else map.put(nums[i], count - 1);
+                
+//             } else map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            
+//         }
+//     }
+    
+}
