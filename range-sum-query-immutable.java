@@ -1,20 +1,20 @@
 class NumArray {
-    public int[] nums;
-    public NumArray(int[] nums) {
-        this.nums = nums;
-    }
-    
-    public int sumRange(int i, int j) {
-        int sum = 0;
-        if(i > j) return 0;
-        for(int k = i; k <= j; k++) {
-            sum += nums[k];
-        }
-        
-        return sum;
-    }
+    // public int[] nums;
+    int[] dp;
+    public NumArray(int[] nums) {
+        // this.nums = nums;
+        
+        dp = new int[nums.length+1];
+        for(int i = 0; i < nums.length; i++) {
+            dp[i+1] = dp[i] + nums[i];
+        }
+    }
+    
+    public int sumRange(int i, int j) {
+        return dp[j+1]-dp[i];
+    }
 }
-​
+
 /**
  * Your NumArray object will be instantiated and called as such:
  * NumArray obj = new NumArray(nums);
