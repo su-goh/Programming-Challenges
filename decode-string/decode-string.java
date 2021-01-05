@@ -1,35 +1,38 @@
-class Solution {
-    public String decodeString(String s) {
-        Stack<Character> stack = new Stack<>();
+//                 for(int j = 1; j < times; j++) currSeq.append(c);
+//                 c = currSeq.toString();
+//                 for(int j = 0; j <= c.length() - 1; j++) stack.push(currSeq.charAt(j))                
+//             }
+//         }
+        
+//         while(!stack.isEmpty()) sb.insert(0, stack.pop());
+        
+//         return sb.toString();
+        
+        String ret = "";
+        Stack<String> st = new Stack<>();
+        Stack<Integer> ct = new Stack<>();
         StringBuilder sb = new StringBuilder();
+        StringBuilder times = new StringBuilder();
         
         for(int i = 0; i < s.length(); i++) {
-            if(s.charAt(i) != ']') {
-                stack.push(s.charAt(i));
+            if(Character.isDigit(s.charAt(i))) {
+                times.append(s.charAt(i));
+            } else if(s.charAt(i) == '[') {
+                Integer number = Integer.valueOf(times.toString());
+                times = new StringBuilder();
+                st.push(ret);
+                ct.push(number);
+                ret = "";
+            } else if(s.charAt(i) == ']') {
+                sb = new StringBuilder(st.pop());
+                int number = ct.pop();
+                for(int j = 0; j < number; j++) sb.append(ret);
+                ret = sb.toString();
             } else {
-                StringBuilder currSeq = new StringBuilder();
-                while(!stack.peek().equals('[')) {
-                    Character currChar = (Character)stack.pop();
-                    currSeq.insert(0, currChar);
-                }
-                
-                stack.pop();
-                StringBuilder timeString = new StringBuilder();
-                while(!stack.isEmpty() && Character.isDigit(stack.peek())) 
-                    timeString.insert(0, stack.pop());
-                int times = Integer.valueOf(timeString.toString());
-                String c = currSeq.toString();
-                for(int j = 1; j < times; j++) currSeq.append(c);
-                c = currSeq.toString();
-                for(int j = 0; j <= c.length() - 1; j++) stack.push(currSeq.charAt(j));
-                // System.out.println(currSeq.toString());
-                
+                ret += s.charAt(i);
             }
         }
         
-        while(!stack.isEmpty()) sb.insert(0, stack.pop());
-        
-        return sb.toString();
-        
+        return ret;
     }
 }
