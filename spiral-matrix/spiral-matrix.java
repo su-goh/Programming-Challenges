@@ -1,30 +1,29 @@
 class Solution {
     public List<Integer> spiralOrder(int[][] matrix) {
-        List<Integer> ret = new ArrayList<>();
+        List<Integer> order = new ArrayList<>();
+        int m = matrix.length, n = matrix[0].length;
+        int minI = 0, maxI = m;
+        int minJ = 0, maxJ = n;
         
-        int n = matrix.length, m = matrix[0].length;
-        int minI = 0, maxI = n;
-        int minJ = 0, maxJ = m;
-                
-        while(ret.size() < n * m) {
+        while(order.size() < m*n) {
+            // left
             for(int j = minJ; j < maxJ; j++) {
-                ret.add(matrix[minI][j]);
-                System.out.println(minI + " " + j);
+                order.add(matrix[minI][j]);
             }
             
+            // down
             for(int i = minI + 1; i < maxI; i++) {
-                ret.add(matrix[i][maxJ - 1]);
-                System.out.println(i + " " + (maxJ - 1));
+                order.add(matrix[i][maxJ - 1]);
             }
             
-            for(int j = maxJ - 2; j >= minJ && minI != maxI - 1; j--) {
-                ret.add(matrix[maxI - 1][j]);
-                System.out.println((maxI - 1) + " " + j);
+            // right
+            for(int j = maxJ - 2; j >= minJ && order.size() < m*n; j--) {
+                order.add(matrix[maxI - 1][j]);
             }
             
-            for(int i = maxI - 2; i > minI && minJ != maxJ - 1; i--) {
-                ret.add(matrix[i][minJ]);
-                System.out.println(i + " " + minJ);
+            // up
+            for(int i = maxI - 2; i > minI && order.size() < m*n; i--) {
+                order.add(matrix[i][minJ]);
             }
             
             minI++;
@@ -33,6 +32,6 @@ class Solution {
             maxJ--;
         }
         
-        return ret;
+        return order;
     }
 }
