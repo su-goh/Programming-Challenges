@@ -1,18 +1,16 @@
 class Solution {
     public String removeDuplicates(String s) {
-        Deque<Character> stack = new LinkedList<>();
         StringBuilder validString = new StringBuilder();
         
         for(int i = 0; i < s.length(); i++) {
-            Character currChar = s.charAt(i);
+            char currChar = s.charAt(i);
             
-            if(stack.isEmpty()) stack.addLast(currChar);
-            else if(stack.peekLast().equals(currChar)) stack.pollLast();
-            else stack.addLast(currChar);
+            if(validString.length() == 0) validString.append(currChar);
+            else if(validString.charAt(validString.length() - 1) == currChar) 
+                validString.deleteCharAt(validString.length() - 1);
+            else validString.append(currChar);
         }
-        
-        while(!stack.isEmpty()) validString.append(stack.pollFirst());
-        
+                
         return validString.toString();
     }
 }
