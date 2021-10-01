@@ -1,32 +1,24 @@
 class Solution {
     public int[] exclusiveTime(int n, List<String> logs) {
         int[] excl = new int[n];   
-        Stack<Log> st = new Stack<>();
+        Stack<int[]> st = new Stack<>();
 
         for(int i = 0; i < logs.size(); i++) {
-            Log currProc = new Log(logs.get(i));
-            if(currProc.isStart) {
-                st.push(currProc);
+            String[] currProc = logs.get(i).split(":");
+            int proc = Integer.parseInt(currProc[0]);
+            int time = Integer.parseInt(currProc[2]);
+            boolean isStart = currProc[1].equals("start");
+            
+            if(isStart) {
+                st.push(new int[]{proc, time});
             } else {
-                Log prevProc = st.pop();
-                excl[currProc.proc] += currProc.time - prevProc.time + 1;
-                if(!st.isEmpty()) excl[st.peek().proc] -= (currProc.time - prevProc.time + 1);
+                int[] prevProc = st.pop();
+                int len = time - prevProc[1] + 1;
+                excl[proc] += len;
+                if(!st.isEmpty()) excl[st.peek()[0]] -= len;
             }
         }
         
         return excl;
-    }
-    
-    private class Log{
-        int time;
-        int proc;
-        boolean isStart;
-        
-        public Log(String s) {
-            String[] currProc = s.split(":");
-            proc = Integer.parseInt(currProc[0]);
-            time = Integer.parseInt(currProc[2]);
-            isStart = currProc[1].equals("start");
-        }
     }
 }
