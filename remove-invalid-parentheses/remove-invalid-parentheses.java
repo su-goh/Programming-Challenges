@@ -1,48 +1,33 @@
 class Solution {
-    HashSet<String> validStrings = new HashSet<>();
+    ArrayList<String> validStrings;
     
     public List<String> removeInvalidParentheses(String s) {
-        validStrings = new HashSet<>();
-        int numLeftToRemove = 0, numRightToRemove = 0;
+        validStrings = new ArrayList<>();
         
-        // pre process, compute numLeftToRemove and numRightToRemove
-        for(int i = 0; i < s.length(); i++) {
-            char currChar = s.charAt(i);
-            
-            if(currChar == '(') numLeftToRemove++;
-            else if(currChar == ')') {
-                if(numLeftToRemove <= 0) numRightToRemove++;
-                else numLeftToRemove--;
-            }
-        }
-                
-        // dfs to find validStrings
-        recurse(0, 0, 0, new StringBuilder(), s, numLeftToRemove, numRightToRemove);
+        recurse(s, 0, 0, new int[]{'(', ')'});
         
-        return new ArrayList<String>(validStrings);
+        return validStrings;
     }
     
-    private void recurse(int leftCount, int rightCount, int i, StringBuilder sb, String s, int numLeftToRemove, int numRightToRemove) {
-        if(i == s.length()) {
-            if(leftCount == rightCount && numLeftToRemove == 0 && numRightToRemove == 0) validStrings.add(sb.toString());
+    private void recurse(String s, int lastVisit, int lastRemove, int[] brackets) {
+        int counter = 0;
+        for(int i = lastVisit; i < s.length(); i++) {
+            if(s.charAt(i) == brackets[0]) counter++;
+            else if(s.charAt(i) == brackets[1]) counter--;
+            if(counter >= 0) continue; // string is valid to this point
+            
+            // an extra ')' detected, remove all ')' since the lastRemoved )
+            for(int j = lastRemove; j <= i; j++) {
+                if(s.charAt(j) == brackets[1] && (j == lastRemove || s.charAt(j - 1) != brackets[1])) {
+                    recurse(s.substring(0, j) + s.substring(j + 1, s.length()), i, j, brackets);
+                }
+            }
             return;
         }
-
-        char currChar = s.charAt(i);
-                
-        // discard current
-        if(currChar == '(' && numLeftToRemove > 0 && numRightToRemove >= 0) {
-            recurse(leftCount, rightCount, i + 1, sb, s, numLeftToRemove - 1, numRightToRemove);
-        } else if(currChar == ')' && numRightToRemove > 0 && numLeftToRemove >= 0) {
-            recurse(leftCount, rightCount, i + 1, sb, s, numLeftToRemove, numRightToRemove - 1);
-        }
         
-        // keep
-        sb.append(currChar);
-        if(currChar == '(') recurse(leftCount + 1, rightCount, i + 1, sb, s, numLeftToRemove, numRightToRemove);
-        else if(currChar == ')' && rightCount < leftCount) recurse(leftCount, rightCount + 1, i + 1, sb, s, numLeftToRemove, numRightToRemove);
-        else recurse(leftCount, rightCount, i + 1, sb, s, numLeftToRemove, numRightToRemove);
-        
-        sb.deleteCharAt(sb.length() - 1);
+        // remove all possible ')' that needs to be considered, consider extra '('
+        String reverse = (new StringBuilder(s)).reverse().toString();
+        if(brackets[0] == ')') validStrings.add(reverse);
+        else recurse(reverse, 0, 0, new int[]{')', '('});
     }
 }
