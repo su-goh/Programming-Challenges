@@ -7,13 +7,14 @@ class Solution {
             String currString = strings[i];
             StringBuilder currSb = new StringBuilder();
             char prevChar = currString.charAt(0);
-            currSb.append("0");
+            currSb.append("0,");
             
             for(int j = 1; j < currString.length(); j++) {
                 char currChar = currString.charAt(j);
                 int diff = currChar - prevChar;
                 if(diff < 0) diff += 26;
                 currSb.append(diff + ",");
+                
                 prevChar = currChar;
             }
             
