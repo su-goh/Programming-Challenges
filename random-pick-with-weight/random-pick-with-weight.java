@@ -14,11 +14,11 @@ class Solution {
         int target = 1 + rdm.nextInt(accumulatedW[accumulatedW.length - 1]);
         
         int l = 0, r = accumulatedW.length - 1;
-        while(l < r) {
+        while(l <= r) {
             int m = l + (r - l)/2;
             
             if(accumulatedW[m] < target) l = m + 1;
-            else if(accumulatedW[m] > target) r = m;
+            else if(accumulatedW[m] > target) r = m - 1;
             else return m;
         }
         
