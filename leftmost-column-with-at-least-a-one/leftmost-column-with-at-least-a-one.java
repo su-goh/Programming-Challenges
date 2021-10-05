@@ -20,22 +20,20 @@ class Solution {
         int col = dim.get(1);
         
         for(int i = 0; i < row; i++) {
-            binarySearch(i, 0, col - 1);
+            binarySearch(i, 0, Math.min(minCol, col - 1));
+            if(minCol == 0) return minCol;
         }
         
         return minCol == Integer.MAX_VALUE ? -1 : minCol;
     }
     
     private void binarySearch(int i, int start, int end) {
-        while(start < end) {
+        while(start <= end) {
             int mid = start + (end - start)/2;
             if(binaryMatrix.get(i, mid) == 1) {
-                end = mid;
+                end = mid - 1;
                 minCol = Math.min(minCol, mid);
             } else start = mid + 1;
         }
-        
-        int mid = start + (end - start)/2;
-        if(binaryMatrix.get(i, mid) == 1) minCol = Math.min(minCol, mid);
     }
 }
