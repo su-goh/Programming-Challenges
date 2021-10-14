@@ -1,92 +1,81 @@
 class LRUCache {
-    class DLinkedNode {
-        int key;
-        int val;
-        DLinkedNode next;
-        DLinkedNode prev;
-        
-        public DLinkedNode(int key, int val) {
-            this.key = key;
-            this.val = val;
-        }
-        
-        // add to head
-        public void add(DLinkedNode newNode) {
-            this.next = newNode;
-            newNode.prev = this;
-        }
-        
-        // detach node from list
-        public void detach() {
-            // TODO what if prev or next is head/tail
-            this.prev.next = this.next;
-            this.next.prev = this.prev;
-            
-            this.prev = null;
-            this.next = null;
-        }
-    }
-    
-    Map<Integer, DLinkedNode> cache;
-    DLinkedNode head;
-    DLinkedNode tail;
+
+    HashMap<Integer, Node> cacheMap;
+    Node cacheHead;
+    Node cacheTail;
+    int size;
     int capacity;
     
     public LRUCache(int capacity) {
-        cache = new HashMap<>();
+        this.size = 0;
         this.capacity = capacity;
+        cacheMap = new HashMap<>();
+        cacheHead = new Node(-1, -1);
+        cacheTail = new Node(-1, -1);
         
-        head = new DLinkedNode(-1, -1);
-        tail = new DLinkedNode(-1, -1);
-        head.next = tail;
-        tail.prev = head;
+        cacheHead.next = cacheTail;
+        cacheTail.prev = cacheHead;
     }
     
     public int get(int key) {
-        if(cache.containsKey(key)) {
-            DLinkedNode targetNode = cache.get(key);
-            targetNode.detach();
-            moveToHead(targetNode);
-            return targetNode.val;
+        if(cacheMap.containsKey(key)) {
+            // move to top
+            moveToTop(remove(key));
+            return cacheMap.get(key).val;
         } else return -1;
     }
     
-    public void put(int key, int value) {        
-        if(cache.containsKey(key)) {
-            DLinkedNode target = cache.get(key);
-            target.val = value;
-            target.detach();
-            moveToHead(target);
+    public void put(int key, int value) {
+        if(cacheMap.containsKey(key)) {
+            cacheMap.get(key).val = value;
+            moveToTop(remove(key));
         } else {
-            if(cache.size() >= capacity) {
-                removeLeast();
-            }   
-            DLinkedNode newNode = new DLinkedNode(key, value);
-            cache.put(key, newNode);
-            moveToHead(newNode);
+            Node curr = new Node(key, value);
+            moveToTop(curr);
+            cacheMap.put(key, curr);
+            size++;
+            
+            if(size > capacity) {
+                Node toRemove = remove(cacheTail.prev.key);
+                cacheMap.remove(toRemove.key);
+                size--;
+            }
         }
     }
     
-    private void moveToHead(DLinkedNode newHead) {
-        newHead.next = head.next;
-        newHead.prev = head;
+    private Node remove(int key) {
+        Node curr = cacheMap.get(key);
+        Node prev = curr.prev;
+        Node next = curr.next;
         
-        head.next.prev = newHead;
-        head.next = newHead;
+        prev.next = next;
+        next.prev = prev;
         
-        System.out.println("new head: " + head.next.key + " tail: " + tail.prev.key);
+        curr.next = null;
+        curr.prev = null;
+        
+        return curr;
     }
     
-    private void removeLeast() {
-        DLinkedNode toRemove = tail.prev;
-        // tail.prev = tail.prev.prev;
-        // tail.prev.next = tail;
-        toRemove.detach();
-        cache.remove(toRemove.key);
-        
-        System.out.println("removed " + toRemove.key);
+    private void moveToTop(Node curr) {
+        curr.prev = cacheHead;
+        curr.next = cacheHead.next;
+
+        cacheHead.next = curr;
+        curr.next.prev = curr;
     }
     
+    class Node {
+        Node prev;
+        Node next;
+        int key;
+        int val;
+        
+        public Node(int key, int val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
 }
 
 /**
